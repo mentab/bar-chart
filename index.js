@@ -9,7 +9,8 @@ req.onload	=	function()
 	
 	const parseTime	=	d3.timeParse("%Y-%m-%d")
 
-	dataset.forEach(function(d) {
+	dataset.forEach(function(d)
+	{
 		d.push(parseTime(d[0]));
 	});
 
@@ -33,11 +34,49 @@ req.onload	=	function()
 								return `<strong>More information for:</strong>&nbsp;<span style="color:red">${d[0]}</span>`;
 							});
 
+
+	function changeFill(selection)
+	{
+		selection.attr('fill', 'orange');
+	}
+
+	function resetFill(selection)
+	{
+		selection.attr('fill', 'skyblue');
+	}
+
+	function appendTooltip(selection)
+	{
+		
+	}
+
+	function handleMouseOver(d)
+	{
+		d3.select(this)
+			.attr('fill', 'orange');
+
+		svg.append("text")
+			.attr('id', 'tooltip')
+			.attr('x', (d) => xScale(d[2]))
+			.attr('y', (d) => yScale(d[1]))
+			.attr('data-date', d[0])
+			.text(() => `<strong>More information for:</strong>&nbsp;<span style="color:red">${d[0]}</span>`);
+	}
+					
+	function handleMouseOut()
+	{
+		// Use D3 to select element, change color back to normal
+		d3.select(this)
+			.attr('fill', 'skyblue');
+
+		// Select text by id and then remove
+		d3.select('#tooltip').remove();  // Remove text location
+	}
+
 	d3.select('.content')
 		.append('h1')
 		.attr('id', 'title')
-		.text(title);						
-					
+		.text(title);
 
     const svg		=	d3.select('.content')
                 			.append('svg')
@@ -50,16 +89,16 @@ req.onload	=	function()
 		.data(dataset)
 		.enter()
 		.append('rect')
-		.attr('x', (d, i) => xScale(d[2]))
-		.attr('y', (d, i) => yScale(d[1]))
+		.attr('x', (d) => xScale(d[2]))
+		.attr('y', (d) => yScale(d[1]))
 		.attr('width', w / dataset.length)
 		.attr('height', (d) => h - padding - yScale(d[1]))
     	.attr('fill', 'skyblue')
 		.attr('class', 'bar')
 		.attr('data-date', (d) => d[0])
 		.attr('data-gdp', (d) => d[1])
-		.on('mouseover', tip.show)
-		.on('mouseout', tip.hide);
+		.on('mouseover', handleMouseOver)
+		.on('mouseout', handleMouseOut);
 
 	const xAxis		=	d3.axisBottom(xScale);
 	const yAxis		=	d3.axisLeft(yScale);
