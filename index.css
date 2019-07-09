@@ -1,0 +1,45 @@
+*
+{
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body
+{
+	font-family: Verdana, Geneva, Tahoma, sans-serif;
+	background: slategray;
+}
+
+.container
+{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+}
+
+.content
+{	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	height: 600px;
+	width: 900px;
+	padding: 50px;
+	background: white;
+	box-shadow: 2px 2px 9px black;
+}
+
+#title
+{
+	font-weight: normal;
+}
+
+#tooltip
+{
+	padding: 5px;
+	border-radius: 5px;
+	border: 1px black solid;
+	background: white;
+}

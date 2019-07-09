@@ -3,14 +3,22 @@ req.open('GET', 'https://raw.githubusercontent.com/freeCodeCamp/ProjectReference
 req.send();
 req.onload	=	function()
 {
-	const dataset	=	JSON.parse(req.responseText).data;
+	const data		=	JSON.parse(req.responseText);
+	const dataset	=	data.data;
+	const title		=	data.name;
+	
+	const parseTime	=	d3.timeParse("%Y-%m-%d")
 
-	const w			=	1200;
-    const h			=	600;
+	dataset.forEach(function(d) {
+		d.push(parseTime(d[0]));
+	});
+
+	const w			=	800;
+    const h			=	500;
     const padding	=	60;
 	
-	const xScale	=	d3.scaleLinear()
-                     		.domain([0, d3.max(dataset, (d, i) => i)])
+	const xScale	=	d3.scaleTime()
+                     		.domain(d3.extent(dataset, (d) => d[2]))
 							.range([padding, w - padding]);
     
     const yScale	=	d3.scaleLinear()
@@ -22,25 +30,31 @@ req.onload	=	function()
 							.offset([-10, 0])
 							.html((d) => {
 								d3.select('#tooltip').attr('data-date', d[0]);
-								return '<strong>More information for:</strong> <span style="color:red">' + d[0] + ' ' + d[1] + '</span>';
+								return `<strong>More information for:</strong>&nbsp;<span style="color:red">${d[0]}</span>`;
 							});
 
-    const svg		=	d3.select('body')
+	d3.select('.content')
+		.append('h1')
+		.attr('id', 'title')
+		.text(title);						
+					
+
+    const svg		=	d3.select('.content')
                 			.append('svg')
                 			.attr('width', w)
 							.attr('height', h);
-	
+
 	svg.call(tip);
 
 	svg.selectAll('rect')
 		.data(dataset)
 		.enter()
 		.append('rect')
-		.attr('x', (d, i) => xScale(i))
+		.attr('x', (d, i) => xScale(d[2]))
 		.attr('y', (d, i) => yScale(d[1]))
-		.attr('width', 3)
-		.attr('height', (d, i) => h - padding - yScale(d[1]))
-    	.attr('fill', 'navy')
+		.attr('width', w / dataset.length)
+		.attr('height', (d) => h - padding - yScale(d[1]))
+    	.attr('fill', 'skyblue')
 		.attr('class', 'bar')
 		.attr('data-date', (d) => d[0])
 		.attr('data-gdp', (d) => d[1])
