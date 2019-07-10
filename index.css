@@ -19,16 +19,30 @@ body
 	height: 100vh;
 }
 
-.content
-{	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	height: 600px;
-	width: 900px;
+.padding-box
+{
 	padding: 50px;
 	background: white;
 	box-shadow: 2px 2px 9px black;
+}
+
+.content
+{	
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.bar
+{
+	cursor: pointer;
+}
+
+.bar:hover
+{
+	fill: orange;
 }
 
 #title
@@ -38,6 +52,8 @@ body
 
 #tooltip
 {
+	width: 220px;
+	text-align: center;
 	padding: 5px;
 	border-radius: 5px;
 	border: 1px black solid;
